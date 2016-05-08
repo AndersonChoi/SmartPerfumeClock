@@ -2,7 +2,6 @@
 #include <VirtualWire.h>
 
 #define N_CELL 8
-#define BRIGHTNESS 50
 
 const int ledPin = 10;
 const int rfPin = 11;
@@ -18,7 +17,8 @@ void setup()
 {
   Serial.begin(9600);
   ledStick.begin();
-  ledStick.setBrightness(BRIGHTNESS); 
+  showNormalLED();
+  delay(500);
   vw_set_rx_pin(rfPin);
   vw_setup(2000); 
   vw_rx_start(); 
@@ -30,7 +30,7 @@ void setup()
 void loop()
 {
 
-
+  
   if (vw_get_message(message, &messageLength)) // Non-blocking
   {
     Serial.print("Received: ");
@@ -50,11 +50,16 @@ void loop()
   {
     Serial.println("pump01 is active@!");
     pumpActive01();
-    showLed(1,2);
+    showLed(1,4);
     rfSignalIn=false;
+    showNormalLED();
+    delay(10);
+    
+
   }
 
 
+  delay(10);
   
 
 }
@@ -77,10 +82,15 @@ void pumpActive02(){
 
 void showLed(int color,int count)
 {
+  int r=200;
+  int g=10;
+  int b=20;
 
-  int r=250;
-  int g=0;
-  int b=0;
+  if(color=1){
+    r=20;
+    g=10;
+    b=250;
+  }
   
   int bright=100;
   int brightDelay=100;
@@ -88,6 +98,7 @@ void showLed(int color,int count)
   for(int i=0;i<count;i++)
   {
         ledStick.clear();
+        ledStick.setBrightness(bright); 
         ledStick.setColor(0,   r, g, b);
         ledStick.setColor(1,   r, g, b);
         ledStick.setColor(2,   r, g, b);
@@ -96,7 +107,6 @@ void showLed(int color,int count)
         ledStick.setColor(5,   r, g, b);
         ledStick.setColor(6,   r, g, b);
         ledStick.setColor(7,   r, g, b);
-        ledStick.setBrightness(bright); 
         ledStick.show();
         delay(brightDelay);
         ledStick.clear();
@@ -107,4 +117,23 @@ void showLed(int color,int count)
   ledStick.clear();
 }
 
+void showNormalLED(){
+
+  int bright=130;
+  int r=10;
+  int b=10;
+  int g=10;
+  ledStick.clear();
+  ledStick.setBrightness(bright); 
+  ledStick.setColor(0,   r, g, b);
+  ledStick.setColor(1,   r, g, b);
+  ledStick.setColor(2,   r, g, b);
+  ledStick.setColor(3,   r, g, b);
+  ledStick.setColor(4,   r, g, b);
+  ledStick.setColor(5,   r, g, b);
+  ledStick.setColor(6,   r, g, b);
+  ledStick.setColor(7,   r, g, b);
+  ledStick.show();
+  
+}
 
