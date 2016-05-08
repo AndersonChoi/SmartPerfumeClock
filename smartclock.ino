@@ -65,17 +65,17 @@ void loop()
   
   if (vw_get_message(message, &messageLength)) // Non-blocking
   {
-    //Serial.print("Received: ");
+    Serial.print("Received: ");
     for (int i = 0; i < messageLength; i++)
     { 
-      //Serial.write(message[i]);
+      Serial.write(message[i]);
       if(message[i]==49)// 49byte == "1"
       {
         rfSignalIn=true;
       }
     }
     
-    //Serial.println();
+    Serial.println();
   }
 
   
@@ -129,7 +129,7 @@ void showLed(int color,int count)
   int g=10;
   int b=20;
 
-  if(color=1){
+  if(color==1){
     r=20;
     g=10;
     b=250;
