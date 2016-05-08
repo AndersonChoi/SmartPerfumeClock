@@ -12,8 +12,8 @@ const int resetPin=6;
 const int dcPin=7;
 const int csPin=8;
 
-
 boolean rfSignalIn=false;
+boolean btSignalIn=false;
 byte message[VW_MAX_MESSAGE_LEN]; // a buffer to store the incoming messages
 byte messageLength = VW_MAX_MESSAGE_LEN; // the size of the message
 
@@ -24,7 +24,7 @@ NS_Rainbow ledStick = NS_Rainbow(N_CELL,ledPin);
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   myScreen.begin();  
   myScreen.background(0,0,0); 
@@ -54,20 +54,31 @@ void loop()
 {
 
   
+  if (Serial.available())  {
+      if(Serial.read()==97) // a==97
+      {
+        btSignalIn=true;
+      }
+  }
+  
+
+  
   if (vw_get_message(message, &messageLength)) // Non-blocking
   {
-    Serial.print("Received: ");
+    //Serial.print("Received: ");
     for (int i = 0; i < messageLength; i++)
     { 
-      Serial.write(message[i]);
+      //Serial.write(message[i]);
       if(message[i]==49)// 49byte == "1"
       {
         rfSignalIn=true;
       }
     }
     
-    Serial.println();
+    //Serial.println();
   }
+
+  
 
   if(rfSignalIn)
   {
@@ -77,8 +88,17 @@ void loop()
     rfSignalIn=false;
     showNormalLED();
     delay(10);
-    
+  }
+  
 
+  if(btSignalIn)
+  {
+    Serial.println("pump02 is active@!");
+    pumpActive02();
+    showLed(0,4);
+    btSignalIn=false;
+    showNormalLED();
+    delay(10);
   }
 
 
