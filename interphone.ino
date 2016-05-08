@@ -12,7 +12,10 @@ void setup() {
   pinMode(buttonPin, INPUT);   
   pinMode(rfPin, OUTPUT);
   pinMode(piezoPin, OUTPUT);
+  vw_set_tx_pin(rfPin); 
+  vw_setup(2000); 
   
+  delay(500);
 }
 
 void loop(){
@@ -21,6 +24,8 @@ void loop(){
   Serial.println(val);     
 
   if(val==HIGH){
+    Serial.println("send message 111");     
+    send("111");
     tone(piezoPin, hz01);
     delay(500);
     tone(piezoPin, hz02);
@@ -30,10 +35,23 @@ void loop(){
     tone(piezoPin, hz02);
     delay(1100);
     noTone(piezoPin);  
+    Serial.println("send message 111");     
+    send("111");
+    delay(1000);
+    
+  }else{
 
+    Serial.println("send message 000");    
+    send("000");
+    delay(50);
     
   }
   
   delay(10);
   
+}
+void send (char *message)
+{
+  vw_send((uint8_t *)message, strlen(message));
+  vw_wait_tx();
 }
