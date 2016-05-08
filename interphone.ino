@@ -24,8 +24,6 @@ void loop(){
   Serial.println(val);     
 
   if(val==HIGH){
-    Serial.println("send message 111");     
-    send("111");
     tone(piezoPin, hz01);
     delay(500);
     tone(piezoPin, hz02);
