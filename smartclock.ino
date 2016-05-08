@@ -1,21 +1,38 @@
 #include <NS_Rainbow.h>
 #include <VirtualWire.h>
-
+#include <TFT.h> // Hardware-specific library
+#include <SPI.h>
+ 
 #define N_CELL 8
+const int Relay = 2;
+const int Relay2 = 3;
+const int ledPin = 4;
+const int rfPin = 5;
+const int resetPin=6;
+const int dcPin=7;
+const int csPin=8;
 
-const int ledPin = 10;
-const int rfPin = 11;
-const int Relay = 12;
-const int Relay2 = 13;
+
 boolean rfSignalIn=false;
-NS_Rainbow ledStick = NS_Rainbow(N_CELL,ledPin);
-
 byte message[VW_MAX_MESSAGE_LEN]; // a buffer to store the incoming messages
 byte messageLength = VW_MAX_MESSAGE_LEN; // the size of the message
+
+TFT myScreen = TFT(csPin, dcPin, resetPin);
+
+NS_Rainbow ledStick = NS_Rainbow(N_CELL,ledPin);
+
 
 void setup()
 {
   Serial.begin(9600);
+  
+  myScreen.begin();  
+  myScreen.background(0,0,0); 
+  
+  myScreen.stroke(255, 0, 0); // set the stroke color to red
+  myScreen.line(0, 10, myScreen.width(), 10);
+
+  
   ledStick.begin();
   showNormalLED();
   delay(500);
