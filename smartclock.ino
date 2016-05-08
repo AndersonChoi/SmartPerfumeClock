@@ -29,8 +29,14 @@ void setup()
   myScreen.begin();  
   myScreen.background(0,0,0); 
   
-  myScreen.stroke(255, 0, 0); // set the stroke color to red
-  myScreen.line(0, 10, myScreen.width(), 10);
+  myScreen.stroke(255,255,255);
+  myScreen.setTextSize(2);
+  myScreen.text("Smart",5,0);
+  
+  myScreen.text("Perfume",5,20);
+  myScreen.text("Clock",5,40);
+  myScreen.setTextSize(4);
+  myScreen.text("15:00 ",15,70);
 
   
   ledStick.begin();
