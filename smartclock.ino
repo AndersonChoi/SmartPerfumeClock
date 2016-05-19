@@ -2,6 +2,7 @@
 #include <VirtualWire.h>
 #include <TFT.h> // Hardware-specific library
 #include <SPI.h>
+#include <Time.h>
  
 #define N_CELL 8
 const int Relay = 2;
@@ -11,6 +12,8 @@ const int rfPin = 5;
 const int resetPin=6;
 const int dcPin=7;
 const int csPin=8;
+unsigned long previousMillis = 0; // LED의 상태가 업데이트된 시간을 기록할 변수  
+const long interval = 1000;    //LED 상태 변경할 시간 지정(ms단위)  
 
 boolean rfSignalIn=false;
 boolean btSignalIn=false;
@@ -36,7 +39,7 @@ void setup()
   myScreen.text("Perfume",5,20);
   myScreen.text("Clock",5,40);
   myScreen.setTextSize(4);
-  myScreen.text("15:00 ",15,70);
+  //myScreen.text("15:00 ",15,70);
 
   
   ledStick.begin();
@@ -47,12 +50,14 @@ void setup()
   vw_rx_start(); 
   pinMode(Relay, OUTPUT);     //Set Pin3 as output
   pinMode(Relay2, OUTPUT);     //Set Pin3 as output
+
+  setTime(14,20,0,11,3,16);
 }
 
 
 void loop()
 {
-
+  unsigned long currentMillis = millis();  
   
   if (Serial.available())  {
       if(Serial.read()==97) // a==97
@@ -84,7 +89,7 @@ void loop()
   {
     Serial.println("pump01 is active@!");
     pumpActive01();
-    showLed(1,4);
+    showLed(1,6);
     rfSignalIn=false;
     showNormalLED();
     delay(10);
@@ -95,14 +100,19 @@ void loop()
   {
     Serial.println("pump02 is active@!");
     pumpActive02();
-    showLed(0,4);
+    showLed(0,6);
     btSignalIn=false;
     showNormalLED();
     delay(10);
   }
 
-
-  delay(10);
+ if(currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;       
+     myScreen.setCursor(10,70);
+    myScreen.setTextSize(3);
+    digitalClockDisplay(myScreen);
+ }
+  delay(5);
   
 
 }
@@ -130,18 +140,19 @@ void showLed(int color,int count)
   int b=20;
 
   if(color==1){
-    r=20;
+    r=200;
     g=10;
-    b=250;
+    b=20;
   }
   
-  int bright=100;
+  int bright=190;
   int brightDelay=100;
 
   for(int i=0;i<count;i++)
   {
         ledStick.clear();
         ledStick.setBrightness(bright); 
+        
         ledStick.setColor(0,   r, g, b);
         ledStick.setColor(1,   r, g, b);
         ledStick.setColor(2,   r, g, b);
@@ -162,7 +173,7 @@ void showLed(int color,int count)
 
 void showNormalLED(){
 
-  int bright=130;
+  int bright=40;
   int r=10;
   int b=10;
   int g=10;
@@ -180,3 +191,16 @@ void showNormalLED(){
   
 }
 
+void digitalClockDisplay(TFT screen){
+
+    myScreen.noStroke(); 
+    myScreen.fill(0,0,0);
+    screen.rect(10,70,screen.width(),screen.height());
+  
+    screen.print(hour());
+    screen.print(":");
+    screen.print(minute());
+    screen.print(":");
+    screen.print(second());
+
+}
