@@ -87,6 +87,16 @@ void loop()
 
   if(rfSignalIn)
   {
+      
+    myScreen.setCursor(10,94);
+    myScreen.setTextSize(2);
+    myScreen.noStroke(); 
+    myScreen.fill(0,0,0);
+    myScreen.rect(10,94,myScreen.width(),myScreen.height());
+    myScreen.print("Interphone\n Ring!");
+    //myScreen.text("Interphone Ring!",10,80);
+
+    
     Serial.println("pump01 is active@!");
     pumpActive01();
     showLed(1,6);
@@ -98,6 +108,15 @@ void loop()
 
   if(btSignalIn)
   {
+    
+    myScreen.setCursor(10,94);
+    myScreen.setTextSize(2);
+    myScreen.noStroke(); 
+    myScreen.fill(0,0,0);
+    myScreen.rect(10,94,myScreen.width(),myScreen.height());
+    myScreen.print("SmartPhone\n Ring!");
+    //myScreen.text("SmartPhone Ring!",10,94);
+    
     Serial.println("pump02 is active@!");
     pumpActive02();
     showLed(0,6);
@@ -108,7 +127,7 @@ void loop()
 
  if(currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;       
-     myScreen.setCursor(10,70);
+     myScreen.setCursor(10,65);
     myScreen.setTextSize(3);
     digitalClockDisplay(myScreen);
  }
@@ -195,12 +214,16 @@ void digitalClockDisplay(TFT screen){
 
     myScreen.noStroke(); 
     myScreen.fill(0,0,0);
-    screen.rect(10,70,screen.width(),screen.height());
-  
+    screen.rect(10,65,screen.width(),22);
     screen.print(hour());
     screen.print(":");
     screen.print(minute());
     screen.print(":");
-    screen.print(second());
+    if(second()<10)
+    {
+      screen.print("0");
+      screen.print(second());
+    }else
+      screen.print(second());
 
 }
